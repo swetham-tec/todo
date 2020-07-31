@@ -1,0 +1,57 @@
+const mongoose = require('mongoose');
+const express = require('express');
+const bodyParser = require('body-parser');
+const express = require('express');
+const jwt= require('jsonwebtoken');
+
+
+const app = express();
+http.createServer(function (req, res) {
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.end();
+}).listen(8080);
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+
+app.get("/", (req, res) => {
+  res.json({message:'Get Method working'});
+});
+
+app.post('/post',verifyToken,(req,res)=>{
+	jwt.verify(req.token, 'secretkey',(error,authorizedData)=>{
+	if(error){
+	res.send({status:0,error:error});
+	}else{
+	res.json({message:'Post method working',auth:authorizedData});
+	}
+	})
+
+});
+
+function verifyToken(req,res,next){
+	const jwtToken=req.headers['authorization'];
+	if(typeof jwt !=='undefined'){
+	var token= jwtToken.split(' ');
+	 token = token[1];
+	 req.token=token;
+	 next();
+	
+	}else {
+	res.send({status:0,message:"you are not authorized person"});
+	}
+	}
+
+app.listen(8050,(req,res)=>{
+console.log("server running in the 8050 port");
+});
+
+
+
+
+
+
+
+
+

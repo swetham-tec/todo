@@ -1,0 +1,39 @@
+const jwt = require('jsonwebtoken');
+var bcrypt = require('bcryptjs');
+var mongoose = require('mongoose');
+var User = require('/model/user');
+module.exports = function(app, io) {
+
+    app.post('/login', function(req, res){
+
+User.findOne({userName: req.body.userName}, function(error, user) {
+            if (error) {
+                res.send({status: 0, 'error': error});
+            } else if(!user){
+                res.status(401).send({status: 2, 'error': 'invalid credentials'});
+            } else { var token = jwt.sign(user.toJSON(),{expiresIn: '10h'});
+                     res.send({status: 1, 'success': token});
+                    }
+                });
+            }
+        });
+    });
+
+    app.post('/signup', function(req, res){
+        let user = new Uaer({
+            userName: req.body.userName,
+            password: req.body.password
+        });
+        user.save(function(error, success){
+            if(error){
+                res.send({status: 0 , 'error': error});
+            } else {
+                res.send({status: 1, success: 'Account Created Successfully'});
+            }
+        });
+    });
+
+	
+	
+	
+}
